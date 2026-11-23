@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NOVA — Personal AI Operating System</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+:root{--bg:#04060d;--tx:#e8f1ff;--mu:#8091b4;--a:#22d3ee;--b:#8b5cf6;--c:#3b82f6;--bd:rgba(255,255,255,.13);--gl:rgba(18,24,48,.55);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;min-height:100%;background:radial-gradient(1200px 700px at 50% -10%,#101a3a,var(--bg) 60%) fixed var(--bg);color:var(--tx);font:15px/1.5 'Space Grotesk',system-ui,sans-serif;overflow-x:hidden}
+h1,h2,h3,.logo{font-family:Orbitron,'Space Grotesk',sans-serif;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:var(--gl);border:1px solid var(--bd);border-radius:14px;padding:10px 14px;backdrop-filter:blur(14px);transition:transform .15s,border-color .2s,box-shadow .2s}
+button:hover{border-color:var(--a);box-shadow:0 0 18px -4px var(--a)}button:active{transform:scale(.96)}
+input,select,textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--bd);border-radius:14px;padding:11px 14px;outline:none;min-width:0}
+input:focus,select:focus,textarea:focus,button:focus-visible{border-color:var(--a);box-shadow:0 0 0 3px rgba(34,211,238,.2)}
+select option{background:#0b1022}
+#intro{position:fixed;inset:0;z-index:50;display:grid;place-items:center;text-align:center;background:var(--bg);transition:opacity .7s,transform .7s}
+#intro.out{opacity:0;transform:scale(1.15);pointer-events:none}
+#c0{position:absolute;inset:0;width:100%;height:100%}
+.ic{position:relative;z-index:1;margin-top:46vh;padding:0 20px}
+.logo{font-size:clamp(44px,13vw,92px);font-weight:800;letter-spacing:.18em;background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;padding-left:.18em}
+.sub{color:var(--mu);margin:6px 0 22px;font-size:17px}
+.cta{background:linear-gradient(120deg,rgba(34,211,238,.25),rgba(139,92,246,.35));border-color:var(--a);padding:14px 30px;border-radius:40px;font-family:Orbitron,sans-serif;letter-spacing:.2em;font-size:13px;animation:glow 3s infinite}
+@keyframes glow{50%{box-shadow:0 0 34px -2px var(--a)}}
+.ic small{display:block;margin-top:18px;color:var(--mu)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:linear-gradient(var(--bg),transparent)}
+header b{font-family:Orbitron,sans-serif;letter-spacing:.2em}
+.pill{font-size:11px;border:1px solid var(--a);color:var(--a);border-radius:20px;padding:2px 10px;margin-left:8px}
+#app{max-width:880px;margin:0 auto;padding-bottom:100px}
+.v{display:none;padding:6px 16px}.v.on{display:block;animation:in .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(14px) scale(.985)}}
+.panel{background:var(--gl);border:1px solid var(--bd);backdrop-filter:blur(18px);padding:16px;margin:12px 0;border-radius:26px 8px 26px 8px}
+.panel h3{font-size:14px;margin-bottom:10px;color:var(--a)}
+.note{color:var(--mu);font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1 1 120px}
+.cmd{display:flex;gap:8px;margin:12px 0}.cmd button{flex:0 0 auto}
+.hero{display:flex;align-items:center;gap:6px}.hero canvas{width:44%;aspect-ratio:1;flex:none}
+.hero h2{font-size:clamp(20px,5vw,30px)}
+.hexes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.hex{aspect-ratio:1.1;clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%);border:0;border-radius:0;background:linear-gradient(145deg,rgba(34,211,238,.2),rgba(139,92,246,.28));display:grid;place-items:center;font-size:13px}
+.hex span{font-size:26px;display:block}
+.duo{display:grid;gap:12px;grid-template-columns:1fr}@media(min-width:700px){.duo{grid-template-columns:200px 1fr}}
+.ring{width:130px;height:130px;border-radius:50%;margin:6px auto;display:grid;place-items:center;background:conic-gradient(var(--a) calc(var(--p)*1%),rgba(255,255,255,.1) 0);-webkit-mask:radial-gradient(circle,transparent 52%,#000 53%);mask:radial-gradient(circle,transparent 52%,#000 53%);position:relative}
+.rw{position:relative;width:130px;margin:auto}.rw .ring+b{position:absolute;inset:0;display:grid;place-items:center;font-family:Orbitron,sans-serif}
+ul{list-style:none;margin:0;padding:0}li{padding:6px 0;border-bottom:1px solid var(--bd)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.bar select{flex:1 1 140px}
+#msgs{max-height:52vh;overflow:auto;padding:8px 2px;scroll-behavior:smooth}
+.m{max-width:86%;margin:10px 0;padding:11px 15px;white-space:pre-wrap;word-break:break-word}
+.user{margin-left:auto;background:linear-gradient(135deg,rgba(59,130,246,.4),rgba(139,92,246,.4));border-radius:22px 22px 4px 22px}
+.ai{background:var(--gl);border:1px solid var(--bd);border-left:3px solid var(--a);border-radius:4px 22px 22px 22px}
+.ai small{display:block;color:var(--mu);margin-top:6px;font-size:11px}.ai small button{padding:2px 8px;font-size:11px;border-radius:8px;margin-left:6px}
+.dots i{display:inline-block;width:8px;height:8px;margin:0 3px;border-radius:50%;background:var(--b);animation:dt 1s infinite}.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}
+@keyframes dt{50%{transform:translateY(-7px);background:var(--a)}}
+.vw{text-align:center;padding-top:6px}.vw canvas{width:min(78vw,360px);aspect-ratio:1}
+.wave{display:flex;gap:4px;justify-content:center;align-items:center;height:46px}.wave i{width:5px;height:6px;border-radius:3px;background:linear-gradient(var(--a),var(--b))}
+body[data-st=listening] .wave i,body[data-st=speaking] .wave i{animation:w .7s infinite alternate ease-in-out}
+@keyframes w{to{height:42px}}
+#vst{font-family:Orbitron,sans-serif;color:var(--a);margin:8px 0}
+.vcirc{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.viz{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;min-height:90px}
+.viz div{display:grid;place-items:center;border-radius:50%;text-align:center;font-size:11px;background:radial-gradient(circle at 30% 30%,var(--k),transparent 75%);border:1px solid var(--k);box-shadow:0 0 24px -6px var(--k)}
+.ent{padding:12px;margin:8px 0;background:rgba(255,255,255,.04);border-left:2px solid var(--b);border-radius:4px 18px 18px 4px}
+.ent h4{margin:0 0 4px}.tag{display:inline-block;font-size:11px;padding:1px 8px;margin:2px 4px 0 0;border:1px solid var(--bd);border-radius:10px;color:var(--mu)}
+.ent button{padding:3px 10px;font-size:12px;margin-right:6px}
+.tk{display:flex;gap:10px;align-items:center;padding:12px 14px;margin:8px 0;background:rgba(255,255,255,.05);clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px))}
+.tk.done span{text-decoration:line-through;opacity:.45}.tk span{flex:1}.tk input{width:22px;height:22px;flex:none}.tk em{font-style:normal;font-size:11px;color:var(--mu)}
+.P-High{border-left:4px solid #fb7185}.P-Medium{border-left:4px solid #fbbf24}.P-Low{border-left:4px solid #34d399}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none}.tabs button{flex:none;border-color:var(--k);white-space:nowrap}.tabs button.on{background:var(--k);color:#04060d;font-weight:700}
+.tool{border-top:3px solid var(--k);box-shadow:0 -14px 40px -22px var(--k)}
+.tool label{display:block;margin:8px 0 3px;font-size:13px;color:var(--mu)}
+#out{white-space:pre-wrap;margin-top:12px;padding:12px;border:1px dashed var(--k);border-radius:14px;min-height:50px}
+.sw{display:flex;gap:10px}.sw button{width:38px;height:38px;border-radius:50%;padding:0;flex:none}
+.tg{display:flex;gap:8px;align-items:center;margin:8px 0}.tg input{width:20px;height:20px}
+.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:30;display:flex;gap:4px;max-width:calc(100vw - 16px);overflow-x:auto;padding:6px;border-radius:30px;background:rgba(10,14,30,.82);border:1px solid var(--bd);backdrop-filter:blur(20px);scrollbar-width:none}
+.dock button{border:0;border-radius:22px;padding:8px 12px;font-size:12px;flex:none;background:none;line-height:1.2}.dock button.on{background:linear-gradient(120deg,rgba(34,211,238,.3),rgba(139,92,246,.4))}.dock span{display:block;font-size:18px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body data-st="idle">
+<section id="intro"><canvas id="c0"></canvas><div class="ic"><div class="logo">NOVA</div><p class="sub">Your world. Your intelligence.</p><button class="cta" onclick="boot()">INITIALIZE NOVA</button><small>Personal AI Operating System · Edition 2027</small></div></section>
+<main id="app" hidden>
+<header><div><b id="nm">NOVA</b><span id="stat" class="pill">IDLE</span></div><span id="clk"></span></header>
+
+<section id="v-home" class="v">
+<div class="hero"><canvas id="c1"></canvas><div><h2 id="greet"></h2><p class="note" id="dt"></p></div></div>
+<form class="cmd" onsubmit="return hq(event)"><input id="hin" placeholder="Command your NOVA…" aria-label="Command"><button type="button" onclick="mic()" aria-label="Voice">🎙</button><button aria-label="Send">➤</button></form>
+<div class="hexes"><button class="hex" onclick="go('chat')"><div><span>💬</span>Chat</div></button><button class="hex" onclick="go('voice')"><div><span>🎙</span>Voice</div></button><button class="hex" onclick="go('vault')"><div><span>🧠</span>Vault</div></button><button class="hex" onclick="go('tasks')"><div><span>✔</span>Tasks</div></button><button class="hex" onclick="go('studio')"><div><span>✨</span>Studio</div></button><button class="hex" onclick="go('setup')"><div><span>⚙</span>Setup</div></button></div>
+<div class="duo"><div class="panel"><h3>Productivity</h3><div class="rw"><div class="ring" style="--p:0"></div><b>0%</b></div><p class="note" id="hov" style="text-align:center"></p></div><div class="panel"><h3>Recent activity</h3><ul id="act"></ul></div></div>
+</section>
+
+<section id="v-chat" class="v">
+<div class="bar"><select id="hist" onchange="pick(this.value)" aria-label="History"></select><button onclick="newChat()">＋ New chat</button><button onclick="clr()">Clear</button></div>
+<label class="tg"><input type="checkbox" id="tts"> Speak replies (browser voice)</label>
+<div id="msgs"></div>
+<form class="cmd" onsubmit="return cs(event)"><input id="cin" placeholder="Message…" aria-label="Message"><button type="button" onclick="mic()" aria-label="Voice">🎙</button><button aria-label="Send">➤</button></form>
+<p class="note" id="mode"></p>
+</section>
+
+<section id="v-voice" class="v"><div class="vw"><canvas id="c2"></canvas><div class="wave" id="wave"></div><div id="vst"></div><p id="vtx" class="note"></p><p id="vrep"></p>
+<div class="vcirc"><button class="cta" id="vbtn" onclick="vtog()">START</button><button onclick="vstop()">STOP</button></div>
+<div id="vfb" class="panel" hidden><p class="note">Speech recognition isn’t supported in this browser. Type a command instead.</p><form class="cmd" onsubmit="return vf(event)"><input id="vin" placeholder="Type a command"><button>➤</button></form></div></div></section>
+
+<section id="v-vault" class="v">
+<div class="panel"><h3>Memory vault</h3><div class="viz" id="viz"></div>
+<form onsubmit="return vs(event)"><div class="row"><input id="mt" placeholder="Title"><select id="mc"><option>Note</option><option>Idea</option><option>Info</option><option>Personal</option></select></div><textarea id="mb" rows="3" placeholder="What should NOVA keep?" style="margin:8px 0"></textarea><div class="row"><input id="mg" placeholder="tags, comma separated"><button id="msv">Save memory</button></div></form>
+<p class="note">Stored only in this browser (localStorage). It is not synced, not encrypted, and is lost if you clear site data or switch device or browser. Export is not built yet.</p></div>
+<input id="mq" placeholder="Search memories…" oninput="rv()" aria-label="Search"><div id="mlist"></div>
+</section>
+
+<section id="v-tasks" class="v">
+<div class="duo"><div class="panel"><h3>Daily overview</h3><div class="rw"><div class="ring" style="--p:0"></div><b>0%</b></div><p class="note" id="tov" style="text-align:center"></p></div>
+<div class="panel"><h3>New task</h3><form onsubmit="return ts(event)"><input id="tt" placeholder="What needs doing?"><div class="row" style="margin-top:8px"><input id="td" type="date"><select id="tp"><option>Medium</option><option>High</option><option>Low</option></select><button>Add task</button></div></form>
+<h3 style="margin-top:14px">Reminders</h3><ul id="rem"></ul><p class="note">In-app only: due and overdue tasks appear here while NOVA is open. Push notifications and background alerts are not implemented.</p></div></div>
+<div id="tlist"></div>
+</section>
+
+<section id="v-studio" class="v"><div class="tabs" id="tabs"></div><div class="panel tool" id="tool"></div></section>
+
+<section id="v-setup" class="v">
+<div class="panel"><h3>Personalization</h3>
+<label class="note">Assistant name</label><input id="sn" oninput="sc('name',this.value||'NOVA')">
+<div class="row" style="margin-top:8px"><div><label class="note">Personality</label><select id="sp" onchange="sc('pers',this.value)"><option>Calm</option><option>Witty</option><option>Direct</option><option>Warm</option></select></div><div><label class="note">Response style</label><select id="ss" onchange="sc('style',this.value)"><option>Concise</option><option>Detailed</option></select></div></div>
+<p class="note">Personality and style are sent to the AI backend as instructions. Demo mode ignores them.</p>
+<label class="note">Accent</label><div class="sw" id="sw"></div>
+<label class="tg"><input type="checkbox" id="sf" onchange="sc('snd',this.checked)"> Sound effects</label>
+<label class="note">AI backend endpoint</label><input id="se" placeholder="/.netlify/functions/chat" onchange="sc('endpoint',this.value.trim());rm()">
+<p class="note">Leave empty for demo mode. Never paste an API key here; keys belong in server environment variables.</p>
+<button onclick="wipe()">Erase all NOVA data in this browser</button></div>
+<div class="panel"><h3>What is real</h3><p class="note"><b>Works locally:</b> orb and UI, chat history, commands (time, date, “add task …”, “remember …”), browser voice input and speech where supported, memory vault, tasks, template-based creative tools, personalization.</p><p class="note"><b>Needs a backend and API key:</b> real AI replies. <b>Not implemented:</b> push or background reminders, cross-device sync. Chat replies without a backend are scripted demo output, not AI.</p></div>
+</section>
+
+<nav class="dock" id="dock"></nav>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const ld=(k,d)=>{try{const v=localStorage.getItem('nova_'+k);return v?JSON.parse(v):d}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem('nova_'+k,JSON.stringify(v))}catch(e){}};
+const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let st='idle',cfg=Object.assign({name:'NOVA',pers:'Calm',style:'Concise',acc:'#22d3ee',snd:true,endpoint:''},ld('cfg',{}));
+let conv=ld('conv',[]),cur=conv[0]||null,vt=ld('vault',[]),tk=ld('tasks',[]),act=ld('act',[]),ve=null;
+const log=m=>{act.unshift(new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+' · '+m);act=act.slice(0,6);sv('act',act);ra()};
+function beep(f){if(!cfg.snd)return;try{const a=beep.a||(beep.a=new (window.AudioContext||window.webkitAudioContext)()),o=a.createOscillator(),g=a.createGain();o.frequency.value=f||520;g.gain.value=.03;o.connect(g);g.connect(a.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+.12);o.stop(a.currentTime+.13)}catch(e){}}
+/* ORB */
+const orbs=[];
+function orb(cv){if(!window.THREE)return;const R=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));
+const sc=new THREE.Scene(),cm=new THREE.PerspectiveCamera(45,1,.1,100);cm.position.z=4.4;const g=new THREE.Group();sc.add(g);
+const core=new THREE.Mesh(new THREE.IcosahedronGeometry(1,3),new THREE.MeshBasicMaterial({color:0x22d3ee,wireframe:true,transparent:true,opacity:.4}));
+const inn=new THREE.Mesh(new THREE.SphereGeometry(.72,32,32),new THREE.MeshBasicMaterial({color:0x8b5cf6,transparent:true,opacity:.4}));
+const ring=new THREE.Mesh(new THREE.TorusGeometry(1.35,.012,8,100),new THREE.MeshBasicMaterial({color:0x3b82f6}));ring.rotation.x=1.2;
+const n=800,p=new Float32Array(n*3);for(let i=0;i<n;i++){const u=Math.random()*2-1,t=Math.random()*6.283,r=1.5+Math.random()*.6,s=Math.sqrt(1-u*u);p[i*3]=r*s*Math.cos(t);p[i*3+1]=r*u;p[i*3+2]=r*s*Math.sin(t)}
+const ge=new THREE.BufferGeometry();ge.setAttribute('position',new THREE.BufferAttribute(p,3));
+const pts=new THREE.Points(ge,new THREE.PointsMaterial({color:0x60a5fa,size:.03}));g.add(core,inn,ring,pts);let w0=0,t=0;
+const col={idle:null,listening:0x22d3ee,thinking:0x8b5cf6,speaking:0x3b82f6};
+(function L(){requestAnimationFrame(L);const w=cv.clientWidth,h=cv.clientHeight;if(!w)return;if(w!==w0){w0=w;R.setSize(w,h,false);cm.aspect=w/h;cm.updateProjectionMatrix()}
+t+=.016;const f=st=='thinking'?4:st=='speaking'?2.5:st=='listening'?1.6:.5;g.rotation.y+=.004*f;pts.rotation.y-=.002*f;ring.rotation.z+=.01*f;
+const s=1+Math.sin(t*(st=='speaking'?9:st=='thinking'?5:st=='listening'?3:1.5))*(st=='idle'?.03:.09);core.scale.setScalar(s);inn.scale.setScalar(2-s);
+const c=col[st];core.material.color.set(c||cfg.acc);R.render(sc,cm)})();return 1}
+function setSt(s){st=s;document.body.dataset.st=s;$('#stat').textContent=s.toUpperCase();$('#vst').textContent={idle:'Ready',listening:'Listening…',thinking:'Processing…',speaking:'Speaking…'}[s]}
+/* NAV */
+const V=[['home','🏠','Home'],['chat','💬','Chat'],['voice','🎙','Voice'],['vault','🧠','Vault'],['tasks','✔','Tasks'],['studio','✨','Studio'],['setup','⚙','Setup']];
+$('#dock').innerHTML=V.map(v=>`<button data-v="${v[0]}" onclick="go('${v[0]}')"><span>${v[1]}</span>${v[2]}</button>`).join('');
+function go(v){$$('.v').forEach(e=>e.classList.toggle('on',e.id=='v-'+v));$$('.dock button').forEach(b=>b.classList.toggle('on',b.dataset.v==v));scrollTo(0,0);beep(520);if(v=='chat')rc()}
+/* HOME */
+function tick(){const d=new Date(),h=d.getHours();$('#clk').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});$('#greet').textContent=(h<5?'Still up':h<12?'Good morning':h<18?'Good afternoon':'Good evening')+'.';$('#dt').textContent=d.toLocaleDateString([], {weekday:'long',month:'long',day:'numeric'})}
+function ra(){$('#act').innerHTML=act.length?act.map(a=>`<li>${E(a)}</li>`).join(''):'<li class="note">Nothing yet. Ask NOVA something.</li>'}
+function hq(e){e.preventDefault();const t=$('#hin').value;$('#hin').value='';go('chat');send(t);return false}
+/* CHAT */
+const sp=t=>{if(!('speechSynthesis' in window)){setSt('idle');return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.onstart=()=>setSt('speaking');u.onend=u.onerror=()=>setSt('idle');speechSynthesis.speak(u)};
+function newChat(){cur={id:Date.now(),title:'New chat',m:[]};conv.unshift(cur);sv('conv',conv);rc();log('New chat')}
+function pick(i){cur=conv.find(c=>c.id==i);rc()}
+function clr(){if(!cur)return;cur.m=[];cur.title='New chat';sv('conv',conv);rc()}
+function rm(){$('#mode').innerHTML=cfg.endpoint?'Live mode: replies come from your backend at <code>'+E(cfg.endpoint)+'</code>.':'<b>Demo mode.</b> No AI backend is connected. NOVA only understands a few local commands: “time”, “date”, “add task …”, “remember …”. Connect a backend in Setup for real AI.'}
+function rc(anim){$('#hist').innerHTML=conv.map(c=>`<option value="${c.id}" ${cur&&c.id==cur.id?'selected':''}>${E(c.title)}</option>`).join('')||'<option>No chats yet</option>';
+const m=cur?cur.m:[];$('#msgs').innerHTML=(m.length?m.map((x,i)=>x.r=='user'?`<div class="m user">${E(x.c)}</div>`:`<div class="m ai"><span class="tx">${anim&&i==m.length-1?'':E(x.c)}</span><small>${x.demo?'DEMO · scripted, not AI':'LIVE · AI backend'}<button onclick="cp(${i})">Copy</button></small></div>`).join(''):'<p class="note">Start a conversation. Type below or use the mic.</p>')+(st=='thinking'?'<div class="m ai"><span class="dots"><i></i><i></i><i></i></span></div>':'');
+if(anim){const el=$$('.ai .tx').pop(),f=m[m.length-1].c;let i=0;const iv=setInterval(()=>{el.textContent=f.slice(0,i+=2);$('#msgs').scrollTop=1e9;if(i>=f.length)clearInterval(iv)},16)}$('#msgs').scrollTop=1e9}
+function cp(i){try{navigator.clipboard.writeText(cur.m[i].c)}catch(e){}}
+async function respond(t){
+if(cfg.endpoint){try{const r=await fetch(cfg.endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({system:`You are ${cfg.name}, a ${cfg.pers.toLowerCase()} personal assistant. Response style: ${cfg.style}.`,messages:cur.m.map(x=>({role:x.r=='user'?'user':'assistant',content:x.c}))})});const j=await r.json();return{text:j.reply||'Empty reply.',demo:false}}catch(e){return{text:'Could not reach the AI backend. Check the endpoint in Setup.',demo:true}}}
+let x;if(/^(what('| i)?s the )?time\b/i.test(t))return{text:'It is '+new Date().toLocaleTimeString()+'.',demo:true};
+if(/\b(date|today)\b/i.test(t)&&!/^(add|remember)/i.test(t))return{text:'Today is '+new Date().toLocaleDateString([], {dateStyle:'full'})+'.',demo:true};
+if(x=t.match(/^(?:add task|task)[: ]+(.+)/i)){tk.unshift({id:Date.now(),t:x[1],d:'',p:'Medium',x:false});sv('tasks',tk);rt();return{text:'Task added: '+x[1],demo:true}}
+if(x=t.match(/^(?:remember|note)[: ]+(.+)/i)){vt.unshift({id:Date.now(),t:x[1].slice(0,40),b:x[1],c:'Note',g:[]});sv('vault',vt);rv();return{text:'Saved to your Memory Vault.',demo:true}}
+return{text:'Demo mode: I can’t reason about that without an AI backend. Try “time”, “add task buy milk”, or “remember …”, or connect a backend in Setup.',demo:true}}
+async function send(t,voice){t=(t||'').trim();if(!t)return;if(!cur)newChat();cur.m.push({r:'user',c:t});if(cur.title=='New chat')cur.title=t.slice(0,30);sv('conv',conv);setSt('thinking');rc();beep(700);
+const a=await respond(t);cur.m.push({r:'ai',c:a.text,demo:a.demo});sv('conv',conv);rc(true);log('Asked: '+t.slice(0,22));
+$('#vrep').textContent=a.text;if(voice||$('#tts').checked)sp(a.text);else setSt('idle');return a}
+function cs(e){e.preventDefault();const t=$('#cin').value;$('#cin').value='';send(t);return false}
+/* VOICE */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null;
+function mic(){go('voice');vtog()}
+function vtog(){if(!SR){$('#vfb').hidden=false;return}if(st=='listening'){vstop();return}rec=new SR();rec.lang=navigator.language||'en-US';rec.onresult=e=>{const t=e.results[0][0].transcript;$('#vtx').textContent='“'+t+'”';send(t,true)};rec.onerror=()=>setSt('idle');rec.onend=()=>{if(st=='listening')setSt('idle');$('#vbtn').textContent='START'};try{rec.start();setSt('listening');$('#vbtn').textContent='LISTENING'}catch(e){setSt('idle')}}
+function vstop(){try{rec&&rec.stop()}catch(e){}try{speechSynthesis.cancel()}catch(e){}setSt('idle');$('#vbtn').textContent='START'}
+function vf(e){e.preventDefault();const t=$('#vin').value;$('#vin').value='';$('#vtx').textContent='“'+t+'”';send(t,true);return false}
+/* VAULT */
+function vs(e){e.preventDefault();const o={id:ve||Date.now(),t:$('#mt').value.trim(),b:$('#mb').value.trim(),c:$('#mc').value,g:$('#mg').value.split(',').map(s=>s.trim()).filter(Boolean)};if(!o.t&&!o.b)return false;
+ve?vt=vt.map(x=>x.id==ve?o:x):vt.unshift(o);ve=null;$('#msv').textContent='Save memory';e.target.reset();sv('vault',vt);log('Saved memory: '+(o.t||o.b).slice(0,20));rv();return false}
+function ed(id){const o=vt.find(x=>x.id==id);ve=id;$('#mt').value=o.t;$('#mb').value=o.b;$('#mc').value=o.c;$('#mg').value=o.g.join(', ');$('#msv').textContent='Update memory';scrollTo(0,0)}
+function dl(id){vt=vt.filter(x=>x.id!=id);sv('vault',vt);rv()}
+function rv(){const q=$('#mq').value.toLowerCase(),K={Note:'#22d3ee',Idea:'#f472b6',Info:'#3b82f6',Personal:'#a78bfa'};
+$('#viz').innerHTML=Object.keys(K).map(k=>{const n=vt.filter(x=>x.c==k).length,s=Math.min(46+n*10,110);return`<div style="--k:${K[k]};width:${s}px;height:${s}px">${k}<br>${n}</div>`}).join('');
+const l=vt.filter(x=>(x.t+' '+x.b+' '+x.g.join(' ')+' '+x.c).toLowerCase().includes(q));
+$('#mlist').innerHTML=l.length?l.map(x=>`<div class="ent" style="border-color:${K[x.c]}"><h4>${E(x.t||'Untitled')}</h4><div>${E(x.b)}</div><span class="tag">${x.c}</span>${x.g.map(g=>`<span class="tag">#${E(g)}</span>`).join('')}<div style="margin-top:8px"><button onclick="ed(${x.id})">Edit</button><button onclick="dl(${x.id})">Delete</button></div></div>`).join(''):'<p class="note">No memories match. Save one above.</p>'}
+/* TASKS */
+const td0=()=>new Date().toLocaleDateString('en-CA');
+function ts(e){e.preventDefault();const t=$('#tt').value.trim();if(!t)return false;tk.unshift({id:Date.now(),t,d:$('#td').value,p:$('#tp').value,x:false});sv('tasks',tk);e.target.reset();log('Task: '+t.slice(0,22));rt();return false}
+function tg(id){const o=tk.find(x=>x.id==id);o.x=!o.x;sv('tasks',tk);rt()}
+function tdel(id){tk=tk.filter(x=>x.id!=id);sv('tasks',tk);rt()}
+function rt(){const T=td0(),n=tk.length,d=tk.filter(x=>x.x).length,p=n?Math.round(d/n*100):0,due=tk.filter(x=>!x.x&&x.d&&x.d<=T);
+$$('.ring').forEach(r=>{r.style.setProperty('--p',p);r.nextElementSibling.textContent=p+'%'});
+$('#tov').textContent=`${d} of ${n} done · ${tk.filter(x=>!x.x&&x.d==T).length} due today · ${tk.filter(x=>!x.x&&x.d&&x.d<T).length} overdue`;$('#hov').textContent=n?`${n-d} open tasks`:'No tasks yet';
+$('#rem').innerHTML=due.length?due.map(x=>`<li>${x.d<T?'Overdue':'Today'}: ${E(x.t)}</li>`).join(''):'<li class="note">Nothing due.</li>';
+const o={High:0,Medium:1,Low:2};$('#tlist').innerHTML=tk.length?[...tk].sort((a,b)=>a.x-b.x||(a.d||'9').localeCompare(b.d||'9')||o[a.p]-o[b.p]).map(x=>`<div class="tk P-${x.p} ${x.x?'done':''}"><input type="checkbox" ${x.x?'checked':''} onchange="tg(${x.id})" aria-label="Done"><span>${E(x.t)}<br><em>${x.p}${x.d?' · due '+x.d:''}</em></span><button onclick="tdel(${x.id})" aria-label="Delete">✕</button></div>`).join(''):'<p class="note">No tasks. Add your first above.</p>'}
+/* STUDIO */
+const R=a=>a[Math.floor(Math.random()*a.length)];
+const TL=[
+{n:'Captions',k:'#f472b6',f:[['Topic'],['Tone',['Playful','Bold','Calm']]],g:v=>{const T=v[0]||'today',M={Playful:[`${T}, but make it unforgettable.`,`Plot twist: ${T} is the main character.`,`Less scrolling, more ${T}.`],Bold:[`${T}. No apologies.`,`Built different. Powered by ${T}.`,`Own the moment: ${T}.`],Calm:[`Quiet moments, ${T}.`,`Breathing in ${T}, letting the rest go.`,`Simply ${T}.`]};return M[v[1]].join('\n\n')}},
+{n:'Bio',k:'#a78bfa',f:[['Name'],['Role'],['Interest']],g:v=>`${v[0]} | ${v[1]} who loves ${v[2]}.\n\n${v[1]} by day, ${v[2]} enthusiast always. I’m ${v[0]}.\n\n${v[0]} — building things, chasing ${v[2]}.`},
+{n:'Writing',k:'#22d3ee',f:[['Rough text','area']],g:v=>v[0].replace(/\b(very|really|just|basically|actually|literally)\s+/gi,'').replace(/\s+/g,' ').trim().replace(/(^|[.!?]\s+)([a-z])/g,(m,a,b)=>a+b.toUpperCase()).replace(/([^.!?])$/,'$1.')+'\n\n(Rule-based cleanup: trims filler words, spacing and capitalization. It does not rewrite meaning.)'},
+{n:'Ideas',k:'#fbbf24',f:[['Topic']],g:v=>['A beginner’s guide to','Five myths about','A day in the life with','What I learned from','The tools behind','A before-and-after of'].map((a,i)=>`${i+1}. ${a} ${v[0]}`).join('\n')},
+{n:'Planner',k:'#34d399',f:[['Niche'],['Platform',['Instagram','TikTok','YouTube','LinkedIn','X']]],g:v=>['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((d,i)=>`${d}: ${['Short tip','Behind the scenes','Story / poll','Tutorial','Q&A','Trend take','Recap + preview'][i]} about ${v[0]} on ${v[1]}`).join('\n')},
+{n:'Prompts',k:'#fb7185',f:[['Role'],['Task'],['Context','area'],['Output format']],g:v=>`You are ${v[0]}.\n\nTask: ${v[1]}\n\nContext: ${v[2]}\n\nOutput format: ${v[3]}\n\nAsk me a question if anything is unclear before answering.`}];
+let ti=0;
+function rtool(){const t=TL[ti];$('#tabs').innerHTML=TL.map((x,i)=>`<button style="--k:${x.k}" class="${i==ti?'on':''}" onclick="ti=${i};rtool()">${x.n}</button>`).join('');
+const p=$('#tool');p.style.setProperty('--k',t.k);p.style.borderRadius=['26px 8px','8px 26px','26px','4px 30px','30px 4px','18px'][ti];
+p.innerHTML=`<h3 style="color:${t.k}">${t.n}</h3>`+t.f.map((f,i)=>`<label>${f[0]}</label>`+(f[1]=='area'?`<textarea id="sf${i}" rows="4"></textarea>`:Array.isArray(f[1])?`<select id="sf${i}">${f[1].map(o=>`<option>${o}</option>`).join('')}</select>`:`<input id="sf${i}">`)).join('')+`<div class="row" style="margin-top:12px"><button onclick="gen()">Generate</button><button onclick="try{navigator.clipboard.writeText($('#out').textContent)}catch(e){}">Copy</button></div><div id="out"></div><p class="note">Template-based, runs locally. This is not AI generation.</p>`}
+function gen(){const t=TL[ti];$('#out').textContent=t.g(t.f.map((f,i)=>$('#sf'+i).value.trim()));log('Studio: '+t.n);beep(640)}
+/* SETUP */
+const AC=['#22d3ee','#8b5cf6','#3b82f6','#f472b6','#34d399'];
+$('#sw').innerHTML=AC.map(c=>`<button style="background:${c}" onclick="sc('acc','${c}')" aria-label="Accent ${c}"></button>`).join('');
+function sc(k,v){cfg[k]=v;sv('cfg',cfg);ac()}
+function ac(){document.documentElement.style.setProperty('--a',cfg.acc);$('#nm').textContent=cfg.name.toUpperCase().slice(0,14)}
+function wipe(){if(!confirm('Erase all NOVA data stored in this browser?'))return;try{Object.keys(localStorage).filter(k=>k.startsWith('nova_')).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()}
+function boot(){beep(440);$('#intro').classList.add('out');$('#app').hidden=false;orb($('#c1'));orb($('#c2'));go('home');setTimeout(()=>$('#intro').style.display='none',750)}
+/* INIT */
+$('#wave').innerHTML=Array.from({length:18},(_,i)=>`<i style="animation-delay:${i*.06}s"></i>`).join('');
+$('#sn').value=cfg.name;$('#sp').value=cfg.pers;$('#ss').value=cfg.style;$('#sf').checked=cfg.snd;$('#se').value=cfg.endpoint;
+ac();tick();setInterval(tick,15000);ra();rm();rv();rt();rtool();rc();setSt('idle');orb($('#c0'));
+</script></body></html>
